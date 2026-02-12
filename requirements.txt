@@ -4,5 +4,6 @@ py-cord==2.3.3
 # Web server para Render
 Flask==2.3.3
 
-# Dependências extras (ajuda com asyncio e requests se precisar futuramente)
+# Dependências extras
 aiohttp==3.8.4
+requests==2.32.1
