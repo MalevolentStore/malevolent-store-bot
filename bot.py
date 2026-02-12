@@ -200,7 +200,8 @@ def keep_alive():
                 print(f"Ping enviado: {r.status_code}")
             except Exception as e:
                 print(f"Erro no ping: {e}")
-            time.sleep(25 * 60)  # ping a cada 25 minutos
+            time.sleep(10 * 60)  # ping a cada 10 minutos
+
 
     Thread(target=ping, daemon=True).start()
 
