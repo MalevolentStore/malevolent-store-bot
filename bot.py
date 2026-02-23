@@ -4,8 +4,6 @@ from discord import ButtonStyle, Interaction, Embed
 import os
 from flask import Flask
 from threading import Thread
-import requests
-import time
 
 intents = discord.Intents.default()
 bot = discord.Bot(intents=intents)
@@ -173,7 +171,7 @@ async def calcular_brainrot(ctx: discord.ApplicationContext):
 
     await ctx.followup.send(embed=embed, view=view, ephemeral=True)
 
-# --------- FLASK + KEEP-ALIVE ---------
+# --------- FLASK (necessário para o Render detectar porta) ---------
 app = Flask(__name__)
 
 @app.route("/")
@@ -184,28 +182,7 @@ def run_web():
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
 
-Thread(target=run_web).start()
-
-# Função para manter o bot acordado
-def keep_alive():
-    url = os.environ.get("KEEP_ALIVE_URL")  # URL do Render
-    if not url:
-        print("Nenhuma URL para keep-alive encontrada!")
-        return
-
-    def ping():
-        while True:
-            try:
-                r = requests.get(url)
-                print(f"Ping enviado: {r.status_code}")
-            except Exception as e:
-                print(f"Erro no ping: {e}")
-            time.sleep(10 * 60)  # ping a cada 10 minutos
-
-
-    Thread(target=ping, daemon=True).start()
-
-# Chamando keep-alive
-keep_alive()
-
-bot.run(os.getenv("TOKEN"))
+# --------- INICIALIZAÇÃO SEGURA ---------
+if __name__ == "__main__":
+    Thread(target=run_web, daemon=True).start()
+    bot.run(os.getenv("TOKEN"))
